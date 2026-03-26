@@ -5,6 +5,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'firebase_options.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/auth/presentation/bloc/auth_bloc.dart';
 
 Future<void> main() async {
 
@@ -22,12 +25,20 @@ Future<void> main() async {
   );
 
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const MyApp(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(),
+        ),
+      ],
+      child: DevicePreview(
+        enabled: !kReleaseMode,
+        builder: (context) => const MyApp(),
+      ),
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -35,13 +46,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      useInheritedMediaQuery: true, // Required for DevicePreview
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       title: 'Washub',
       debugShowCheckedModeBanner: false,
       theme: WashubTheme.lightTheme,
-      // Abhi ke liye LoginScreen ki jagah placeholder
-      home: const Scaffold(body: Center(child: Text("Washub Initialized"))),
+      home: const LoginScreen(), // Set to our Auth Screen
     );
   }
 }

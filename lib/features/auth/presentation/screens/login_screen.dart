@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/auth_bloc.dart';
+import '../bloc/auth_event.dart';
+import '../bloc/auth_state.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/phone_input_card.dart';
 
@@ -14,19 +18,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _phoneController.dispose(); // Senior rule: Clean up memory
+    _phoneController.dispose();
     super.dispose();
   }
 
   void _handleContinue() {
     final phone = _phoneController.text.trim();
     if (phone.length == 10) {
-      // Success case
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Sending OTP to +91 $phone")),
-      );
+      // Logic: Trigger BLoC to send OTP
+      context.read<AuthBloc>().add(SendOTPEvent(phone));
     } else {
-      // Error case
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please enter a valid 10-digit number")),
       );
@@ -54,16 +55,37 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 40),
                   PhoneInputCard(controller: _phoneController),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: _handleContinue,
-                    child: const Text("Continue", style: TextStyle(fontSize: 18)),
+
+                  // BLoC Integration: UI reacts to States
+                  BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthCodeSent) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("OTP Sent Successfully!")),
+                        );
+                        // TODO: Navigate to OTP Verification Screen here
+                      } else if (state is AuthError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is AuthLoading) {
+                        return const CircularProgressIndicator();
+                      }
+                      return ElevatedButton(
+                        onPressed: _handleContinue,
+                        child: const Text("Continue", style: TextStyle(fontSize: 18)),
+                      );
+                    },
                   ),
+
                   const SizedBox(height: 32),
                   const Text("Or", style: TextStyle(color: Colors.grey)),
                   const SizedBox(height: 24),
-                  // Google Sign-In placeholder
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {}, // TODO: Google Sign In logic
                     child: Image.network(
                       'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png',
                       height: 40,
