@@ -27,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    // 2. Handle OTP Verification
     on<VerifyOTPEvent>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -34,10 +35,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           verificationId: event.verificationId,
           smsCode: event.smsCode,
         );
+        // Sign the user in with the credential
         await _auth.signInWithCredential(credential);
         emit(AuthSuccess());
       } catch (e) {
-        emit(AuthError(e.toString()));
+        emit(AuthError("Invalid OTP. Please try again."));
       }
     });
   }

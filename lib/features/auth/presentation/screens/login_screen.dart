@@ -5,6 +5,7 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/phone_input_card.dart';
+import 'otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -63,6 +64,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("OTP Sent Successfully!")),
                         );
+
+                        if (state is AuthCodeSent) {
+                          // Navigation: Move to OTP Screen and pass the verificationId
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OtpScreen(
+                                verificationId: state.verificationId,
+                              ),
+                            ),
+                          );
+                        }
                         // TODO: Navigate to OTP Verification Screen here
                       } else if (state is AuthError) {
                         ScaffoldMessenger.of(context).showSnackBar(
