@@ -49,22 +49,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<GoogleSignInEvent>((event, emit) async {
       emit(AuthLoading());
       try {
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        if (googleUser == null) {
-          emit(AuthInitial()); // User cancelled the picker
-          return;
-        }
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
+        final GoogleSignInAuthentication? googleAuth = googleUser?.authentication;
+        final String? accessToken = (await googleUser?.authorizationClient.authorizeScopes([]))?.accessToken;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
+          accessToken: accessToken,
+          idToken: googleAuth?.idToken,
         );
 
         await _auth.signInWithCredential(credential);
         emit(AuthSuccess());
       } catch (e) {
-        emit(AuthError("Google Sign-In failed: ${e.toString()}"));
+        emit(AuthError("Google Sign-In failed"));
       }
     });
   }
