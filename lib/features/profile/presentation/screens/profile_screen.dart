@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';import '../../../../core/theme/app_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:frebulous_app/features/profile/presentation/screens/provider_registration_screen.dart';import '../../../../core/theme/app_theme.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -39,7 +40,12 @@ class ProfileScreen extends StatelessWidget {
               subtitle: const Text("Partner with us to grow your business"),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
-                // TODO: Navigate to Provider Registration Form
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProviderRegistrationScreen(),
+                  ),
+                );
               },
             ),
           ),

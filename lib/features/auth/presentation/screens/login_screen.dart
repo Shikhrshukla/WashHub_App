@@ -5,6 +5,7 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/phone_input_card.dart';
+import 'home_screen.dart';
 import 'otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -73,8 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       } else if (state is AuthSuccess) {
-                        // Navigate to Home once we build it
-                        print("Login Success - Go to Home");
+                        Navigator.pushAndRemoveUntil(
+                          context,MaterialPageRoute(builder: (context) => const HomeScreen()),
+                              (route) => false, // Clears the entire navigation stack
+                        );
                       } else if (state is AuthError) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(state.message), backgroundColor: Colors.red),

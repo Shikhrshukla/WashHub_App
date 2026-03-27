@@ -1,9 +1,12 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'core/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'features/auth/presentation/screens/home_screen.dart';
 import 'firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
@@ -13,10 +16,13 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 2. Firebase Init
+  // 1. Firebase Init
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // 2. Google Sign In Init
+  await GoogleSignIn.instance.initialize();
 
   // 3. Supabase Init
   // await Supabase.initialize(
@@ -46,13 +52,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      useInheritedMediaQuery: true, // For DevicePreview
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       title: 'Washub',
       debugShowCheckedModeBanner: false,
       theme: WashubTheme.lightTheme, // Using our Washub Teal theme
-      home: const LoginScreen(), // <--- This renders your work
+      home: StreamBuilder<firebase_auth.User?>(
+        stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+        if (snapshot.hasData) {
+          return const HomeScreen(); // Logged in!
+        }
+        return const LoginScreen(); // Not logged in!
+      },
+      ), // <--- This renders your work
     );
   }
 }
