@@ -64,19 +64,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("OTP Sent Successfully!")),
                         );
-
-                        if (state is AuthCodeSent) {
-                          // Navigation: Move to OTP Screen and pass the verificationId
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OtpScreen(
-                                verificationId: state.verificationId,
-                              ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OtpScreen(
+                              verificationId: state.verificationId,
                             ),
-                          );
-                        }
-                        // TODO: Navigate to OTP Verification Screen here
+                          ),
+                        );
+                      } else if (state is AuthSuccess) {
+                        // Navigate to Home once we build it
+                        print("Login Success - Go to Home");
                       } else if (state is AuthError) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(state.message), backgroundColor: Colors.red),
@@ -98,7 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text("Or", style: TextStyle(color: Colors.grey)),
                   const SizedBox(height: 24),
                   GestureDetector(
-                    onTap: () {}, // TODO: Google Sign In logic
+                    onTap: () {
+                      context.read<AuthBloc>().add(GoogleSignInEvent());
+                    }, // TODO: Google Sign In logic
                     child: Image.network(
                       'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png',
                       height: 40,

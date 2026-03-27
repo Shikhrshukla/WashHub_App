@@ -19,10 +19,10 @@ Future<void> main() async {
   );
 
   // 3. Supabase Init
-  await Supabase.initialize(
-    url: 'YOUR_SUPABASE_URL',
-    anonKey: 'YOUR_ANON_KEY',
-  );
+  // await Supabase.initialize(
+  //   url: 'YOUR_SUPABASE_URL',
+  //   anonKey: 'YOUR_ANON_KEY',
+  // );
 
   runApp(
     MultiBlocProvider(
@@ -46,13 +46,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      useInheritedMediaQuery: true, // Required for DevicePreview
+      useInheritedMediaQuery: true, // For DevicePreview
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       title: 'Washub',
       debugShowCheckedModeBanner: false,
-      theme: WashubTheme.lightTheme,
-      home: const LoginScreen(), // Set to our Auth Screen
+      theme: WashubTheme.lightTheme, // Using our Washub Teal theme
+      home: const LoginScreen(), // <--- This renders your work
     );
   }
 }

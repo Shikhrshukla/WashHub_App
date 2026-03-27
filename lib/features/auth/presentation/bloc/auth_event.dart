@@ -24,3 +24,5 @@ class VerifyOTPEvent extends AuthEvent {
   @override
   List<Object?> get props => [verificationId, smsCode];
 }
+
+class GoogleSignInEvent extends AuthEvent {}

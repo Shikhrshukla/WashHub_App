@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';
-
-class AuthHeader extends StatelessWidget {
+import '../../../../core/theme/app_theme.dart';class AuthHeader extends StatelessWidget {
   const AuthHeader({super.key});
 
   @override
@@ -10,17 +8,45 @@ class AuthHeader extends StatelessWidget {
       children: [
         // 1. Background Teal Container
         Container(
-          height: 200,
+          height: 220, // Increased height slightly for logo
           width: double.infinity,
           decoration: const BoxDecoration(
             color: washubPrimary,
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
           ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Washub Logo Placeholder
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.local_laundry_service_rounded,
+                  color: Colors.white,
+                  size: 60,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                "WASHUB",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+            ],
+          ),
         ),
 
-        // 2. "Made in Gujarat" Badge (UI Reference Specific)
+        // 2. "Made in Gujarat" Badge
         Positioned(
-          top: 40,
+          top: 50,
           right: 0,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -33,7 +59,7 @@ class AuthHeader extends StatelessWidget {
               style: TextStyle(
                 color: washubPrimary,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 10,
               ),
             ),
           ),
