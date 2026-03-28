@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AuthEvent extends Equatable {
   const AuthEvent();
 
   @override
-  List<Object?> get props => [];}
+  List<Object?> get props => [];
+}
 
-// User clicks "Continue"
 class SendOTPEvent extends AuthEvent {
   final String phoneNumber;
   const SendOTPEvent(this.phoneNumber);
@@ -15,7 +16,6 @@ class SendOTPEvent extends AuthEvent {
   List<Object?> get props => [phoneNumber];
 }
 
-// User enters the 6-digit code
 class VerifyOTPEvent extends AuthEvent {
   final String verificationId;
   final String smsCode;
@@ -26,3 +26,11 @@ class VerifyOTPEvent extends AuthEvent {
 }
 
 class GoogleSignInEvent extends AuthEvent {}
+
+class GoogleSignInWebSuccessEvent extends AuthEvent {
+  final GoogleSignInAccount user;
+  const GoogleSignInWebSuccessEvent(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}

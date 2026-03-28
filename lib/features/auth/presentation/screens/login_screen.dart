@@ -27,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleContinue() {
     final phone = _phoneController.text.trim();
     if (phone.length == 10) {
-      // Logic: Trigger BLoC to send OTP
       context.read<AuthBloc>().add(SendOTPEvent(phone));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -58,7 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   PhoneInputCard(controller: _phoneController),
                   const SizedBox(height: 24),
 
-                  // BLoC Integration: UI reacts to States
                   BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state is AuthCodeSent) {
@@ -75,8 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       } else if (state is AuthSuccess) {
                         Navigator.pushAndRemoveUntil(
-                          context,MaterialPageRoute(builder: (context) => const HomeScreen()),
-                              (route) => false, // Clears the entire navigation stack
+                          context,
+                          MaterialPageRoute(builder: (context) => const HomeScreen()),
+                          (route) => false,
                         );
                       } else if (state is AuthError) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -98,15 +97,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 32),
                   const Text("Or", style: TextStyle(color: Colors.grey)),
                   const SizedBox(height: 24),
+                  
+                  // Google Sign-In Button
                   GestureDetector(
                     onTap: () {
                       context.read<AuthBloc>().add(GoogleSignInEvent());
-                    }, // TODO: Google Sign In logic
+                    },
                     child: Image.network(
                       'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png',
                       height: 40,
                     ),
                   ),
+                  
                   const SizedBox(height: 60),
                   const Text("By continuing, you agree to our", style: TextStyle(fontSize: 12, color: Colors.grey)),
                   const Text(

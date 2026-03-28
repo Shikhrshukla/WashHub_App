@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import 'home_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;
@@ -41,9 +42,14 @@ class _OtpScreenState extends State<OtpScreen> {
             BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthSuccess) {
-                  // Navigate to Home (Placeholder)
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
+                  );
+                } else if (state is AuthError) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Login Successful!")),
+                    SnackBar(content: Text(state.message), backgroundColor: Colors.red),
                   );
                 }
               },
@@ -51,9 +57,16 @@ class _OtpScreenState extends State<OtpScreen> {
                 if (state is AuthLoading) return const CircularProgressIndicator();
                 return ElevatedButton(
                   onPressed: () {
-                    context.read<AuthBloc>().add(
-                      VerifyOTPEvent(widget.verificationId, _otpController.text),
-                    );
+                    final otp = _otpController.text.trim();
+                    if (otp.length == 6) {
+                      context.read<AuthBloc>().add(
+                        VerifyOTPEvent(widget.verificationId, otp),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Enter a valid 6-digit OTP")),
+                      );
+                    }
                   },
                   child: const Text("Verify & Proceed"),
                 );

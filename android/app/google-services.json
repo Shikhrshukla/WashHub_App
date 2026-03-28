@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "26967257381",
+    "project_id": "washhub-uv",
+    "storage_bucket": "washhub-uv.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26967257381:android:98764aae551f57dd962acc",
+        "android_client_info": {
+          "package_name": "com.example.frebulous_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "26967257381-adqhah5d0ccksk886a6kp2o9ciaa48br.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.frebulous_app",
+            "certificate_hash": "dc2d2b5d1913d7a978c2e5cae3f24bef1b821e09"
+          }
+        },
+        {
+          "client_id": "26967257381-albge8gs4rh3kjsd027i3p6j8utkbu06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjYZ_Mx0kWYLSrIwn8zmJhZySLC6joalU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "26967257381-albge8gs4rh3kjsd027i3p6j8utkbu06.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "26967257381-bn25h9hm5hcabua62j96vs3pha81dsf3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.frebulousApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
