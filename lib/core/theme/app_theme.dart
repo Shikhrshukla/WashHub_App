@@ -20,31 +20,60 @@ class WashubTheme {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
+        titleTextStyle: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
       ),
-      // Global Text Theme for Washub
+
+      // Global Text Theme
       textTheme: const TextTheme(
         headlineMedium: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         titleLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
         bodyLarge: TextStyle(color: Colors.black87),
       ),
 
-    // Production-grade Button Theme (Teal buttons by default)
+      // Global Input Decoration (For Search and Forms)
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.black12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: washubPrimary, width: 1.5),
+        ),
+      ),
+
+      // Production-grade Button Themes
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: washubPrimary,
           foregroundColor: Colors.white,
-          minimumSize: const Size(double.infinity, 52), // Standard full-width height
+          minimumSize: const Size(double.infinity, 52),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: 0,
         ),
       ),
-      // Corrected Card Theme for Washub
-      cardTheme: CardThemeData(
-        shape: RoundedRectangleBorder(          borderRadius: BorderRadius.circular(16),
+
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: washubPrimary,
+          side: const BorderSide(color: washubPrimary),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          minimumSize: const Size(double.infinity, 52),
         ),
+      ),
+
+      cardTheme: CardThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
         color: Colors.white,
-        clipBehavior: Clip.antiAlias, // Important for images in cards
+        clipBehavior: Clip.antiAlias,
       ),
     );
   }

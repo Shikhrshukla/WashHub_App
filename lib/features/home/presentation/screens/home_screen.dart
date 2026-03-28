@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../auth/presentation/widgets/laundromat_card.dart';
+import 'laundromat_card.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,40 +10,39 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: washubBg,
+      appBar: AppBar(
+        title: const Text("Frebulous", style: TextStyle(color: washubPrimary, fontWeight: FontWeight.bold)),
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.notifications_none, color: Colors.black)
+          ),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                );
+              },
+              icon: const Icon(Icons.account_circle_outlined, color: Colors.black)
+          ),
+        ],
+      ),
       body: CustomScrollView(
         slivers: [
-          // 1. Production Sliver App Bar
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 100,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
-              title: Row(
+          // 1. Production Header
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
                 children: [
                   const Icon(Icons.location_on, color: washubPrimary, size: 16),
                   const SizedBox(width: 4),
                   Text("Bhavnagar, Gujarat",
-                      style: TextStyle(color: Colors.black.withOpacity(0.8), fontSize: 14)),
+                      style: TextStyle(color: Colors.black.withValues(alpha: 0.8), fontSize: 14)),
                 ],
               ),
             ),
-            actions: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.notifications_none, color: Colors.black)
-              ),
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ProfileScreen()),
-                    );
-                  },
-                  icon: const Icon(Icons.account_circle_outlined, color: Colors.black)
-              ),
-            ],
           ),
 
           // 2. Sticky Search Bar
@@ -56,9 +55,9 @@ class HomeScreen extends StatelessWidget {
           SliverList(
             delegate: SliverChildBuilderDelegate(
                   (context, index) => const LaundromatCard(
-                title: "Washub Magic Care",
+                title: "Frebulous Magic Care",
                 rating: "4.9",
-                promo: "10% Off",
+                promo: "10% Off", imageUrl: '',
               ),
               childCount: 5,
             ),
