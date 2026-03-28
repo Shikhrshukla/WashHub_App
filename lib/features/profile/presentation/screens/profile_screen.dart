@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frebulous_app/features/profile/presentation/screens/provider_registration_screen.dart';import '../../../../core/theme/app_theme.dart';
+import 'package:frebulous_app/features/profile/presentation/screens/provider_registration_screen.dart';
+import '../../../../core/theme/app_theme.dart';
+
+// ✅ Add these imports
+import 'package:firebase_auth/firebase_auth.dart';
+import './admin_panel_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -9,7 +14,10 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: washubBg,
       appBar: AppBar(
-        title: const Text("My Account", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          "My Account",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.white,
       ),
       body: ListView(
@@ -35,8 +43,13 @@ class ProfileScreen extends StatelessWidget {
             ),
             child: ListTile(
               leading: const Icon(Icons.storefront, color: washubPrimary),
-              title: const Text("Register your Laundromat",
-                  style: TextStyle(fontWeight: FontWeight.bold, color: washubPrimary)),
+              title: const Text(
+                "Register your Laundromat",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: washubPrimary,
+                ),
+              ),
               subtitle: const Text("Partner with us to grow your business"),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
@@ -53,15 +66,37 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 24),
           const Divider(),
 
-          ListTile(
-            leading: const Icon(Icons.help_outline, color: Colors.grey),
-            title: const Text("Help Center"),
-            onTap: () {},
-          ),
+          // 🛡️ HIDDEN ADMIN PANEL
+          if (FirebaseAuth.instance.currentUser?.email == "admin@washub.in")
+            ListTile(
+              leading: const Icon(Icons.admin_panel_settings, color: Colors.orange),
+              title: const Text(
+                "Admin Panel",
+                style: TextStyle(
+                  color: Colors.orange,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AdminPanelScreen(),
+                ),
+              ),
+            ),
 
+          const Divider(),
+
+          // Logout
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text("Log Out", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            title: const Text(
+              "Log Out",
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             onTap: () => Navigator.pop(context),
           ),
         ],
