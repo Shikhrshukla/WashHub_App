@@ -25,7 +25,10 @@ class _ProviderRegistrationScreenState extends State<ProviderRegistrationScreen>
   bool _isLoading = false;
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70, // Compress to avoid 'UNKNOWN' network errors
+    );
     if (pickedFile != null) {
       setState(() => _shopImage = File(pickedFile.path));
     }
@@ -45,21 +48,38 @@ class _ProviderRegistrationScreenState extends State<ProviderRegistrationScreen>
 
     try {
       final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception("User not logged in");
 
+      // Verify file exists
+      if (!await _shopImage!.exists()) {
+        throw Exception("Source file not found on device");
+      }
+
+      // 1. Upload Image to Firebase Storage
+      final fileName = '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final storageRef = FirebaseStorage.instance
           .ref()
-          .child('laundromats/${user!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg');
+          .child('laundromats')
+          .child(fileName);
 
-      await storageRef.putFile(_shopImage!);
-      final imageUrl = await storageRef.getDownloadURL();
+      final uploadTask = storageRef.putFile(
+        _shopImage!,
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
 
+      final snapshot = await uploadTask;
+      final imageUrl = await snapshot.ref.getDownloadURL();
+
+      // 2. Save Details to Firestore (Corrected: isVerified set to false)
       await FirebaseFirestore.instance.collection('laundromats').add({
         'name': _nameController.text.trim(),
         'address': _addressController.text.trim(),
         'phone': _phoneController.text.trim(),
         'imageUrl': imageUrl,
         'ownerUid': user.uid,
-        'isVerified': false,
+        'isVerified': false, // Requires Admin approval to show on HomeScreen
+        'rating': 0.0,
+        'promo': "New Partner",
         'createdAt': FieldValue.serverTimestamp(),
       });
 
@@ -70,9 +90,12 @@ class _ProviderRegistrationScreenState extends State<ProviderRegistrationScreen>
         Navigator.pop(context);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${e.toString()}")),
-      );
+      debugPrint("Storage Upload Error: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Registration Failed. Please check internet.")),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -97,46 +120,31 @@ class _ProviderRegistrationScreenState extends State<ProviderRegistrationScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Business Details",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              const Text("Business Details", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-
-              // Shop Name
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: "Laundromat Name",
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: "Laundromat Name", border: OutlineInputBorder()),
                 validator: (v) => v!.isEmpty ? "Required" : null,
               ),
               const SizedBox(height: 16),
-
-              // Image Picker
               Center(
                 child: GestureDetector(
                   onTap: _pickImage,
                   child: Container(
-                    height: 120,
+                    height: 150,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: washubPrimaryLight,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: washubPrimary.withValues(alpha: 0.3),
-                      ),
+                      border: Border.all(color: washubPrimary.withValues(alpha: 0.3)),
                     ),
                     child: _shopImage == null
                         ? const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.add_a_photo, color: washubPrimary, size: 40),
-                        Text(
-                          "Upload Shop Photo",
-                          style: TextStyle(color: washubPrimary),
-                        ),
+                        Text("Upload Shop Photo"),
                       ],
                     )
                         : ClipRRect(
@@ -147,39 +155,26 @@ class _ProviderRegistrationScreenState extends State<ProviderRegistrationScreen>
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Address
               TextFormField(
                 controller: _addressController,
                 maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: "Full Address",
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: "Full Address", border: OutlineInputBorder()),
                 validator: (v) => v!.isEmpty ? "Required" : null,
               ),
               const SizedBox(height: 16),
-
-              // Phone
               TextFormField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  labelText: "Business Phone",
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: "Business Phone", border: OutlineInputBorder()),
                 validator: (v) => v!.length < 10 ? "Invalid phone" : null,
               ),
-
               const SizedBox(height: 32),
-
-              // Submit Button with Loader
               SizedBox(
                 width: double.infinity,
-                child:               ElevatedButton(
+                child: ElevatedButton(
                   onPressed: _isLoading ? null : _submitForm,
                   child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
+                      ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                       : const Text("Submit for Review"),
                 ),
               ),

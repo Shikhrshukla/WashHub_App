@@ -7,6 +7,7 @@ import '../widgets/auth_header.dart';
 import '../widgets/phone_input_card.dart';
 import '../../../../features/home/presentation/screens/home_screen.dart';
 import 'otp_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,6 +34,59 @@ class _LoginScreenState extends State<LoginScreen> {
         const SnackBar(content: Text("Please enter a valid 10-digit number")),
       );
     }
+  }
+
+  // Dedicated Admin Login Dialog
+  void _showAdminLogin() {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Admin Secure Login"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(labelText: "Admin Email"),
+            ),
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: "Password"),
+              obscureText: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: emailController.text.trim(),
+                  password: passwordController.text.trim(),
+                );
+                if (context.mounted) {
+                  Navigator.pop(context); // Close dialog
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
+                  );
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Invalid Admin Credentials")),
+                );
+              }
+            },
+            child: const Text("Login"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -114,6 +168,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text(
                     "Terms of Service  Privacy Policy  Content Policy",
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+                  ),
+                  
+                  // Hidden Admin Entry
+                  const SizedBox(height: 40),
+                  TextButton(
+                    onPressed: _showAdminLogin,
+                    child: Text(
+                      "Staff Login",
+                      style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
+                    ),
                   ),
                 ],
               ),

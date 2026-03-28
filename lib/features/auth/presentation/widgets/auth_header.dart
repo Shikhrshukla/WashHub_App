@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';class AuthHeader extends StatelessWidget {
+import '../../../../core/theme/app_theme.dart';
+
+class AuthHeader extends StatelessWidget {
   const AuthHeader({super.key});
 
   @override
@@ -8,7 +10,7 @@ import '../../../../core/theme/app_theme.dart';class AuthHeader extends Stateles
       children: [
         // 1. Background Teal Container
         Container(
-          height: 220, // Increased height slightly for logo
+          height: 220,
           width: double.infinity,
           decoration: const BoxDecoration(
             color: washubPrimary,
@@ -17,11 +19,11 @@ import '../../../../core/theme/app_theme.dart';class AuthHeader extends Stateles
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Washub Logo Placeholder
+              // Frebulous Logo Placeholder
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -32,7 +34,7 @@ import '../../../../core/theme/app_theme.dart';class AuthHeader extends Stateles
               ),
               const SizedBox(height: 12),
               const Text(
-                "WASHUB",
+                "FREBULOUS",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -44,7 +46,7 @@ import '../../../../core/theme/app_theme.dart';class AuthHeader extends Stateles
           ),
         ),
 
-        // 2. "Made in Gujarat" Badge
+        // 2. Badge
         Positioned(
           top: 50,
           right: 0,

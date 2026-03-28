@@ -6,6 +6,8 @@ class LaundromatCard extends StatelessWidget {
   final String rating;
   final String promo;
   final String imageUrl;
+  final String address;
+  final String phone;
   final bool isVerified;
 
   const LaundromatCard({
@@ -14,6 +16,8 @@ class LaundromatCard extends StatelessWidget {
     required this.rating,
     required this.promo,
     required this.imageUrl,
+    required this.address,
+    required this.phone,
     this.isVerified = false,
   });
 
@@ -118,10 +122,17 @@ class LaundromatCard extends StatelessWidget {
 
                 const SizedBox(height: 6),
 
-                // Location + orders
-                const Text(
-                  "📍 Bhavnagar • 1750+ Orders picked",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                // Dynamic Location + Phone
+                Text(
+                  "📍 $address",
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  "📞 $phone",
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
 
                 const SizedBox(height: 12),
@@ -131,9 +142,9 @@ class LaundromatCard extends StatelessWidget {
                   alignment: Alignment.bottomRight,
                   child: InkWell(
                     onTap: () {
-                      print("Navigating to $title menu");
+                      // Navigate to details/menu
                     },
-                    child: Text(
+                    child: const Text(
                       "View Menu →",
                       style: TextStyle(
                         color: washubPrimary,
