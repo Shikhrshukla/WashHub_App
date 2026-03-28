@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
-import 'home_screen.dart';
+import '../../../../features/home/presentation/screens/home_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;

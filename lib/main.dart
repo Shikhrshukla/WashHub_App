@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
-import 'features/auth/presentation/screens/home_screen.dart';
+import 'features/home/presentation/screens/home_screen.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 
 Future<void> main() async {

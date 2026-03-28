@@ -2,31 +2,30 @@ class LaundromatModel {
   final String id;
   final String name;
   final String imageUrl;
-  final double rating;
-  final String promoTag;
+  final double rating;final String distance;
+  final String promoText;
   final bool isVerified;
-  final String ownerUid;
 
   LaundromatModel({
     required this.id,
     required this.name,
     required this.imageUrl,
     required this.rating,
-    required this.promoTag,
+    required this.distance,
+    this.promoText = "",
     this.isVerified = false,
-    required this.ownerUid,
   });
 
-  // Convert Firestore Map to Model
-  factory LaundromatModel.fromMap(Map<String, dynamic> map, String docId) {
+  // Factory to convert DB map to Dart Object
+  factory LaundromatModel.fromMap(Map<String, dynamic> map, String id) {
     return LaundromatModel(
-      id: docId,
-      name: map['name'] ?? '',
-      imageUrl: map['imageUrl'] ?? '',
+      id: id,
+      name: map['name'] ?? 'Washub Partner',
+      imageUrl: map['imageUrl'] ?? 'https://via.placeholder.com/300',
       rating: (map['rating'] ?? 0.0).toDouble(),
-      promoTag: map['promoTag'] ?? '',
+      distance: map['distance'] ?? 'Near you',
+      promoText: map['promoText'] ?? '',
       isVerified: map['isVerified'] ?? false,
-      ownerUid: map['ownerUid'] ?? '',
     );
   }
 }

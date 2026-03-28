@@ -5,7 +5,7 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/phone_input_card.dart';
-import 'home_screen.dart';
+import '../../../../features/home/presentation/screens/home_screen.dart';
 import 'otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
